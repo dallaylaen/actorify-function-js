@@ -1,0 +1,11 @@
+{
+  "name": "actor-js",
+  "version": "1.0.0",
+  "description": "Automagically convert function calls into events",
+  "main": "index.js",
+  "scripts": {
+    "test": "nyc mocha"
+  },
+  "author": "Konstantin S. Uvarin",
+  "license": "MIT"
+}
