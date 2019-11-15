@@ -42,5 +42,22 @@ describe( 'Actor', _=>{
             done();
         });
     });
+
+    it( 'can return via promise II', done => {
+        const obj = {foo: 0};
+        obj.getFoo = actorify( _=>++obj.foo );
+        obj.frobnicate = actorify( async function(x) {
+            return x + await obj.getFoo();
+        });
+
+        const prom = obj.frobnicate(41);
+        expect( prom ).to.be.instanceof( Promise );
+
+        prom.then( got => {
+            expect( got ).to.equal(42);
+            expect( obj.foo ).to.equal(1);
+            done();
+        });
+    });
 });
 
