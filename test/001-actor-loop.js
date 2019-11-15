@@ -5,8 +5,6 @@ const expect = chai.expect;
 
 const Actor = require('../lib/actor.js');
 
-console.log( Actor );
-
 describe( 'Actor', _=>{
     it( 'can call smth', done => {
         const trace = [];
@@ -66,5 +64,17 @@ describe( 'Actor', _=>{
         done();
     });
 
+    it ('can proxy', done => {
+        let trace = [];
+        const alice = new Actor()
+            .addCall( 'foo', function(n) { trace.push(n); this.bar(n-1) } )
+            .addCall( 'bar', function(n) { trace.push(n); this.foo(n-1) }, { max: 3 } )
+            .makeProxy();
+
+        alice.bar(42);
+        expect( trace ).to.deep.equal( [ 42, 41, 40 ] );
+
+        done();
+    });
 });
 
