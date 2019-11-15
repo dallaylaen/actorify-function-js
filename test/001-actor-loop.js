@@ -32,5 +32,15 @@ describe( 'Actor', _=>{
         done();
     });
 
+    it( 'can return via promise', done => {
+        const squared = actorify( n => n*n );
+        const prom = squared(5);
+        expect( prom ).to.be.instanceof( Promise );
+
+        prom.then( got => {
+            expect( got ).to.equal(25);
+            done();
+        });
+    });
 });
 
