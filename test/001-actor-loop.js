@@ -44,8 +44,8 @@ describe( 'Actor', _=>{
 
         console.log("thomas="+thomas.id+"; jeremy="+jeremy.id);
 
-        thomas.onRecv = msg => console.log(msg);
-        jeremy.onRecv = msg => console.log(msg);
+        thomas.onEnter = msg => console.log(msg);
+        jeremy.onEnter = msg => console.log(msg);
 
         jeremy.onStart = _ => console.log("jeremy start");
         jeremy.onStop  = _ => console.log("jeremy stop");
