@@ -22,13 +22,13 @@ describe( 'Actor', _=>{
         const actor = new Actor()
             .addCall( 'foo', function(txt) {
                  trace.push(['foo', txt]); this.call( 'bar', [ txt ] );
-            } )
+            }, { max: 2} )
             .addCall( 'bar', function(txt) {
                  trace.push(['bar', txt]); this.call( 'foo', [ txt ] );
             } );
 
         actor.call( "foo", [ 42 ] );
-        expect( trace ).to.deep.equal( [["foo", 42], ["bar", 42]] );
+        expect( trace ).to.deep.equal( [["foo", 42], ["bar", 42], ["foo", 42]] );
 
         trace = [];
         actor.call( "bar", [ 42 ] );
