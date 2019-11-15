@@ -3,12 +3,12 @@ const chai = require('chai');
 const should = chai.should();
 const expect = chai.expect;
 
-const Actor = require('../lib/actor.js');
+const actorify = require('../lib/actor.js');
 
 describe( 'Actor', _=>{
     it( 'can call smth', done => {
         const trace = [];
-        const actor = new Actor(function(txt) { trace.push(txt) } );
+        const actor = new actorify.Actor(function(txt) { trace.push(txt) } );
 
         actor.call( undefined, [ 42 ] );
         expect( trace ).to.deep.equal([42]);
@@ -19,8 +19,8 @@ describe( 'Actor', _=>{
         let trace = [];
 
         const scene = {};
-        scene.thomas = new Actor( n => { trace.push(['thomas', n]); scene.jeremy(n-1) } ).proxy();
-        scene.jeremy = new Actor( n => { trace.push(['jeremy', n]); scene.thomas(n-1) }, { max: 3 } ).proxy();
+        scene.thomas = actorify( n => { trace.push(['thomas', n]); scene.jeremy(n-1) } );
+        scene.jeremy = actorify( n => { trace.push(['jeremy', n]); scene.thomas(n-1) }, { max: 3 } );
 
         scene.thomas(42);
         expect( trace ).to.deep.equal( [['thomas', 42], ['jeremy', 41]] );
