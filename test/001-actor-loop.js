@@ -3,7 +3,7 @@ const chai = require('chai');
 const should = chai.should();
 const expect = chai.expect;
 
-const actorify = require('../lib/actor.js');
+const actorify = require('../lib/actorify.js');
 
 describe( 'Actor', _=>{
     it( 'can call smth', done => {
