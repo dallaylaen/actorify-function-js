@@ -10,7 +10,7 @@ describe( 'Actor', _=>{
         const trace = [];
         const actor = new actorify.Actor(function(txt) { trace.push(txt) } );
 
-        actor.call( undefined, [ 42 ] );
+        actor.proxy( 42 );
         expect( trace ).to.deep.equal([42]);
         done();
     });
@@ -47,6 +47,24 @@ describe( 'Actor', _=>{
             ['enter', 41], ['leave', 41],
             ['enter', 40], ['leave', 40],
         ]);
+        done();
+    });
+
+    it( 'keeps track of context in messages', done => {
+        let trace = [];
+        const obj = {};
+        obj.rec = actorify( n => obj.rec(n-1), {
+            onEnter : msg => trace.push(msg),
+            maxdepth: 3,
+        } );
+
+        obj.rec(42);
+
+        expect( trace.length ).to.equal(3);
+        expect( trace[0].context ).to.equal( undefined );
+        expect( trace[1].context.message ).to.equal( trace[0] );
+        expect( trace[2].context.message ).to.equal( trace[1] );
+
         done();
     });
 
