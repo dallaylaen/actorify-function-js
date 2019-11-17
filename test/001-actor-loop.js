@@ -5,7 +5,14 @@ const expect = chai.expect;
 
 const actorify = require('../lib/actorify.js');
 
-describe( 'Actor', _=>{
+/*
+actorify.onSend(msg => console.log( "send"+ msg.str() ));
+actorify.onRecv(msg => console.log( "recv"+ msg.str() ));
+actorify.onSkip(msg => console.log( "skip"+ msg.str() ));
+actorify.onDone(msg => console.log( "done"+ msg.str() ));
+*/
+
+describe( 'actorify()', _=>{
     it( 'can call smth', done => {
         const trace = [];
         const actor = new actorify.Actor(function(txt) { trace.push(txt) } );
@@ -107,5 +114,6 @@ describe( 'Actor', _=>{
         expect( await trace[1] ).to.equal(40);
         expect( await trace[2] ).to.equal(undefined);
     });
+
 });
 
