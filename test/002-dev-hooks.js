@@ -28,6 +28,8 @@ describe( 'actotify.hooks', _ => {
             'skip 0.2 41',
         ]);
 
+        actorify.demolish(); // don't leave hooks behind
+
         done();
     });
 });
