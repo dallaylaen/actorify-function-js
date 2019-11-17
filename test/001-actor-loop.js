@@ -5,13 +5,6 @@ const expect = chai.expect;
 
 const actorify = require('../lib/actorify.js');
 
-/*
-actorify.onSend(msg => console.log( "send"+ msg.str() ));
-actorify.onRecv(msg => console.log( "recv"+ msg.str() ));
-actorify.onSkip(msg => console.log( "skip"+ msg.str() ));
-actorify.onDone(msg => console.log( "done"+ msg.str() ));
-*/
-
 describe( 'actorify()', _=>{
     it( 'can call smth', done => {
         const trace = [];
@@ -115,5 +108,31 @@ describe( 'actorify()', _=>{
         expect( await trace[2] ).to.equal(undefined);
     });
 
+    it ('withstands exceptions', async() => {
+        let trace = [];
+
+        const control = actorify.control();
+        control.onError = ex => trace.push(ex.message);
+
+        const obj = {};
+        obj.good = actorify( async (n) => {
+            const p0 = obj.bad(n-1);
+            const p1 = obj.good(n-2);
+            const p2 = obj.good(n-3);
+
+            return '<'+n+":"+await p0+":"+await p1+":"+await p2+'>';
+        }, {maxdepth: 2});
+        obj.bad = actorify( n => {
+            throw new Error('You shall not pass: '+n);
+        }, {maxdepth: 2});
+
+        const ret = await obj.good(42);
+
+        expect( ret ).to.equal('<42:undefined:<40:undefined:undefined:undefined>:undefined>');
+
+        expect( trace ).to.deep.equal(['You shall not pass: 41', 'You shall not pass: 39']);
+
+        control.reset();
+    });
 });
 
