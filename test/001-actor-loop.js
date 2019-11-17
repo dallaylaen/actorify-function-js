@@ -95,5 +95,17 @@ describe( 'Actor', _=>{
             done();
         });
     });
+
+    it ('leaves no unresolved promises', async () => {
+        const trace = [];
+        const obj = {};
+        obj.rec = actorify( n => { trace.push(obj.rec(n-1)); return n; }
+            , {maxdepth: 3} );
+
+        expect( await obj.rec(42) ).to.equal(42);
+        expect( await trace[0] ).to.equal(41);
+        expect( await trace[1] ).to.equal(40);
+        expect( await trace[2] ).to.equal(undefined);
+    });
 });
 
